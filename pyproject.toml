@@ -18,3 +18,39 @@ addopts = "--flake8"
 
 [pytest.enabler.cov]
 addopts = "--cov"
+
+[tool.pytest.ini_options]
+norecursedirs = [
+    'dist', 
+    'build', 
+    '.tox', 
+    '.eggs'
+]
+addopts = [
+    "--doctest-modules",
+    "--cov=src",
+]
+doctest_optionflags = "ALLOW_UNICODE ELLIPSIS"
+filterwarnings = [
+	# Suppress deprecation warning in flake8
+	"ignore:SelectableGroups dict interface is deprecated::flake8",
+	# Suppress deprecation warning in pypa/packaging#433
+    "ignore:The distutils package is deprecated::packaging.tags"
+]
+testpaths = [
+    "tests",
+]
+
+[tool.mypy]
+mypy_path = "src"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true
