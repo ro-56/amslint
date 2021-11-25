@@ -5,7 +5,14 @@ with open('src/amslint/ams.ams') as f:
     indented_text = f.read()
 import pprint as pp
 
-def make_list(code,indent_level=0, indent_bumb=1):
+def index_to_coordinates(s, index):
+    """Returns (line_number, col) of `index` in `s`."""
+    if not len(s):
+        return 1, 1
+    sp = s[:index+1].splitlines(keepends=True)
+    return len(sp)#, len(sp[-1])
+
+def make_list(code, indent_level=0, indent_bumb=1):
     ID_list = []
     re_id = r'(?s)(?:^|\n)\s{'+str(indent_level)+'}(\w+)\s(\w*)\s\{\n(\s+.+?)\n\s{'+str(indent_level)+'}\}'
     for match in re.finditer(re_id, code):
@@ -23,17 +30,13 @@ def make_list(code,indent_level=0, indent_bumb=1):
         for attMatch in re.finditer(re_multiLineAttb_id, b):
             itm[attMatch.groups()[0]] = attMatch.groups()[1]
         
-        itm['child'] = make_list(match.groups()[2],indent_level+indent_bumb)
+        itm['child'] = make_list(match.groups()[2], indent_level+indent_bumb, indent_bumb)
         ID_list.append(itm)
-        # print(match.groups()[2])
-        # print()
-        # pp.pprint(match.groups())
-        # print()
 
     return ID_list
 
 
-indented_text = indented_text.replace('\t', '    ')
-lisa = make_list(indented_text)
+# indented_text = indented_text.replace('\t', '    ')
+lisa = make_list(indented_text, 0, 1)
 with open('src/amslint/out.json', 'w') as f:
     f.write(str(lisa))
