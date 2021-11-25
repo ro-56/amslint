@@ -58,7 +58,7 @@ class FileContents():
             ident = Identifier(match.groups()[1], match.groups()[0])
             
             att_lst = []
-            re_oneLineAttb_id = r'(?s)(?:\n)\s{'+str(indent_lvl+indent_bumb)+'}(\w+):\s(\w+);'
+            re_oneLineAttb_id = r'(?s)(?:\n)\s{'+str(indent_lvl+indent_bumb)+'}(\w+):\s(?!{\n)(.+?);'
             a = match.groups()[2]
             for attMatch in re.finditer(re_oneLineAttb_id, a):
                 att_lst.append({
@@ -84,7 +84,8 @@ class FileContents():
     
 import re
 
-with open('src/amslint/ams.ams') as f:
+# with open('src/amslint/ams.ams') as f:
+with open('basic/MainProject/basic.ams') as f:
     indented_text = f.readlines()
 
 aaa = FileContents(indented_text)

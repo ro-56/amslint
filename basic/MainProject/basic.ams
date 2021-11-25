@@ -1,0 +1,174 @@
+## ams_version=1.0
+
+Model Main_basic {
+	Section Private_Section {
+		Comment: {
+			"Testing comments;;;"
+		}
+		DeclarationSection __unnamed {
+			Comment: {
+				"Testing comments 2;
+				;;;
+				as;
+				as"
+			}
+			Set Set_01;
+			Parameter Parameter_01;
+			Variable Variable_01 {
+				Range: free;
+			}
+			Constraint Constraint_01 {
+				Definition: 1 = 1;
+			}
+			MathematicalProgram MathProblem_01 {
+				Direction: minimize;
+				Constraints: AllConstraints;
+				Variables: AllVariables;
+				Type: Automatic;
+			}
+			ElementParameter ElementParameter_01 {
+				Range: Set_01;
+			}
+			StringParameter StringParameter_01;
+			Index Index_01;
+			Quantity Quantity_01 {
+				BaseUnit: year;
+			}
+			UnitParameter UnitParameter_01;
+			Convention Conversion_01;
+			ComplementarityVariable CompVar_01 {
+				Range: free;
+			}
+			ElementVariable ElementVar_01 {
+				Range: Set_01;
+			}
+			Arc Arc_01 {
+				Range: free;
+				From: Node_01;
+				To: Node_01;
+			}
+			Node Node_01 {
+				Definition: NetInflow <= 0;
+			}
+			UncertaintyConstraint UncContr_01 {
+				Definition: 1 = 1;
+			}
+			Activity Activity_01 {
+				ScheduleDomain: Calendar_01;
+			}
+			Resource Resource_01 {
+				Usage: sequential;
+				ScheduleDomain: Calendar_01;
+				Activities: Activity_01;
+			}
+			Macro Macro_01 {
+				Definition: "Hello";
+			}
+			Assertion Assertion_01 {
+				AssertLimit: 1;
+				Definition: 1 = 1;
+			}
+			File File_01 {
+				Device: Disk;
+				Mode: replace;
+			}
+			DatabaseTable DbTable_01 {
+				DataSource: "datasource";
+			}
+			Horizon Horizon_01 {
+				Index: h;
+				Parameter: IntervalStart;
+				CurrentPeriod: IntervalStart;
+				Definition: ElementRange( 1, 10, prefix: "p-" );
+			}
+			Calendar Calendar_01 {
+				Index: idx_cal;
+				Unit: year;
+				BeginDate: "2021";
+				EndDate: "2031";
+				TimeslotFormat: "%c%y";
+			}
+		}
+		DeclarationSection Declaration_01 {
+			Parameter P_02;
+			Parameter Copy_P_02 {
+				Property: NoSave;
+				Definition: {
+					1
+					+
+					2
+					+
+					3
+				}
+			}
+			Parameter Copy1_P_02;
+		}
+	}
+	Section Public_Section {
+		Procedure Procedure_1;
+		Function Function_1;
+		DeclarationSection Decl_02;
+		Section Section_2;
+		Module Module_1 {
+			Prefix: m1;
+		}
+		ExternalProcedure ExtProcedure_2 {
+			DllName: "dll_name";
+		}
+		DatabaseProcedure DB_Procedure_1 {
+			DataSource: "datasource";
+			SqlQuery: "query";
+		}
+		ExternalFunction ExtFunction_2 {
+			DllName: "dll_name";
+		}
+	}
+	Procedure MainInitialization {
+		Comment: "Add initialization statements here that do NOT require any library being initialized already.";
+	}
+	Procedure PostMainInitialization {
+		Comment: {
+			"Add initialization statements here that require that the libraries are already initialized properly,
+			or add statements that require the Data Management module to be initialized."
+		}
+	}
+	Procedure MainExecution;
+	Procedure PreMainTermination {
+		Body: {
+			return DataManagementExit();
+		}
+		Comment: {
+			"Add termination statements here that require all libraries to be still alive.
+			Return 1 if you allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence."
+		}
+	}
+	Procedure MainTermination {
+		Body: {
+			return 1;
+		}
+		Comment: {
+			"Add termination statements here that do not require all libraries to be still alive.
+			Return 1 to allow the termination sequence to continue.
+			Return 0 if you want to cancel the termination sequence.
+			It is recommended to only use the procedure PreMainTermination to cancel the termination sequence and let this procedure always return 1."
+		}
+	}
+	Section Quantities_and_Units {
+		Comment: {
+			"This section contains all the units and quantities that are added automatically by AIMMS.
+			It is recommended to declare all your quantities here."
+		}
+		Quantity SI_Time_Duration {
+			BaseUnit: s;
+			Conversions: minute->s : #-># * 60;
+			Comment: {
+				"Expresses the value for the duration of periods.
+				
+				The unit s has been added automatically because it is a required unit for AimmsWebUI.
+				
+				The unit minute has been added automatically because it is a required unit for AimmsWebUI."
+			}
+		}
+	}
+}
