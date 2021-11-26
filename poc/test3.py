@@ -32,11 +32,15 @@ class FileContents():
             if f'{ident.type_} {ident.name} {{\n' in line:
                 decl_line_number = idx
                 break
+            elif f'{ident.type_} {ident.name};' in line:
+                decl_line_number = idx
+                end_line_number = idx
+                return decl_line_number, end_line_number
         
         lvl = len(self.contents[decl_line_number-1][1]) - len(self.contents[decl_line_number-1][1].lstrip('\t'))
 
         for idx, line in self.contents:
-            if idx <= decl_line_number:
+            if idx < decl_line_number:
                 continue
             end_tag = '\t'*lvl + '}'
             if end_tag == line.removesuffix('\n'):
@@ -53,6 +57,11 @@ class FileContents():
         if isinstance(code, list):
             code = '\n'.join(code)
 
+        re_id_2 = r'(?s)(?:^|\n)\s{'+str(indent_lvl)+'}(\w+)\s(\w*);'
+        for match in re.finditer(re_id_2, code):
+            ident = Identifier(match.groups()[1], match.groups()[0])
+            lst.append(ident)
+        
         re_id = r'(?s)(?:^|\n)\s{'+str(indent_lvl)+'}(\w+)\s(\w*)\s\{\n(\s+.+?)\n\s{'+str(indent_lvl)+'}\}'
         for match in re.finditer(re_id, code):
             ident = Identifier(match.groups()[1], match.groups()[0])
