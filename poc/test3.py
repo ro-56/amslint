@@ -94,7 +94,7 @@ class FileContents():
 import re
 
 # with open('src/amslint/ams.ams') as f:
-with open('basic/MainProject/basic.ams') as f:
+with open('basic model/MainProject/basic.ams') as f:
     indented_text = f.readlines()
 
 aaa = FileContents(indented_text)

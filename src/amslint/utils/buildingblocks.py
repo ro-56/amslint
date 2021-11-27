@@ -9,12 +9,17 @@ class Identifier():
     type_: str
     declared_at: int
     to_from: int
+    attributes: list
 
-    def __init__(self, name: str, type_: str, declared_at: int = -1, ends_at: int = -1):
+    def __init__(self, name: str, type_: str, declared_at: int = -1, ends_at: int = -1, attributes: list = None):
         self.name = name
         self.type_ = type_
         self.declared_at = declared_at
         self.ends_at = ends_at
+        self.attributes = attributes if attributes else [] 
+    
+    def __eq__(self, other) : 
+        return self.__dict__ == other.__dict__
 
 
 class FileContents():
