@@ -1,6 +1,0 @@
-{
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true,
-    "restructuredtext.syntaxHighlighting.disabled": true,
-    "restructuredtext.languageServer.disabled": true
-}
