@@ -1,10 +1,10 @@
 import enum
 
 
-class Message():
+class Annotation():
 
 
-    class MessageSeverity(enum.Enum):
+    class AnnotationSeverity(enum.Enum):
         """Possible types:
         CRITICAL, HIGH, MEDIUM, LOW
         """
@@ -14,7 +14,7 @@ class Message():
         LOW = 1
     
 
-    class MessageType(enum.Enum):
+    class AnnotationType(enum.Enum):
         """Possible types:
         VULNERABILITY, CODE_SMELL, BUG
         """
@@ -26,8 +26,8 @@ class Message():
     __title: str
     __summary: str
     __details: str
-    __type: MessageType
-    __severity: MessageSeverity
+    __type: AnnotationType
+    __severity: AnnotationSeverity
     __path: str
     __line: int
 
@@ -41,18 +41,18 @@ class Message():
         severity: str, path: str, line: int, id: str = None
     ) -> None:
         
-        if severity not in Message.MessageSeverity.__members__:
+        if severity not in Annotation.AnnotationSeverity.__members__:
             raise ValueError(f"Invalid severity: {severity}")
         
-        if type not in Message.MessageType.__members__:
+        if type not in Annotation.AnnotationType.__members__:
             raise ValueError(f"Invalid type: {type}")
 
         self.__id = id if id else ""
         self.__title = title
         self.__summary = summary
         self.__details = details
-        self.__type = Message.MessageType[type]
-        self.__severity = Message.MessageSeverity[severity]
+        self.__type = Annotation.AnnotationType[type]
+        self.__severity = Annotation.AnnotationSeverity[severity]
         self.__path = path
         self.__line = line
 
@@ -159,12 +159,12 @@ class Report():
     __reporter: str
     __result: ResultType
     __report_data: list[ReportData]
-    __messages: list[Message]
+    __messages: list[Annotation]
 
 
     def __init__(
         self, title: str, details: str, type: str, reporter: str,
-        id: str = None, messages: list[Message] = None
+        id: str = None, messages: list[Annotation] = None
     ) -> None:
         
         if type not in Report.ReportType.__members__:

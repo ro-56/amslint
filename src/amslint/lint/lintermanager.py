@@ -1,64 +1,31 @@
 from amslint.utils.buildingblocks import FileContents
-from amslint.reports.handlers import Report, Message
+from amslint.reports.handlers import Report, Annotation
+from amslint.messages.handler import MessageHandler
 
 
 class BasicLinter():
 
-    __report: Report
     __files: list[FileContents]
+    __message_handler: MessageHandler
 
-    def __init__(self, report: Report, files: list[FileContents]) -> None:
-        self.__report = report
+    def __init__(self, files: list[FileContents]) -> None:
         self.__files = files
+        self.__message_handler = MessageHandler()
 
+    @staticmethod
+    def message_handler(self):
+        return self.__message_handler
 
-    def report(self) -> Report:
-        return self.__report
-
-
+    @staticmethod
     def analyze_files(self) -> None:
         for file in self.__files:
             self.__analyze_file(file)
         return None
-
+    
+    @staticmethod
+    def get_messages(self):
+        return self.__message_handler.get_messages()
 
     def __analyze_file(self, file: FileContents) -> None:
         """Should be implemented at every subclass"""
         pass
-
-
-
-
-
-
-# class LinterManager():
-
-#     __file_contents: FileContents
-#     __active_linters: list[Linter]
-
-
-#     def __init__(self, file_contents: FileContents, active_linters: list[Linter] = None, message_handler: MessageHandler = None) -> None:
-#         self.__file_contents = file_contents
-#         self.__active_linters = active_linters
-#         if message_handler is None:
-#             self.__message_handler = MessageHandler()
-#         else:
-#             self.__message_handler = message_handler
-
-
-#     def analyse_file(self) -> None:
-#         for linter in self.__active_linters:
-#             linter.analyze(self.__file_contents, self.__message_handler)
-
-
-#     def set_linters(self, linters: list[Linter]) -> None:
-#         self.__active_linters = linters
-#         return None
-
-
-#     def get_active_linters(self) -> list[Linter]:
-#         return self.__active_linters
-
-
-#     def get_filename(self) -> str:
-#         return self.__filename

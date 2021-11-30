@@ -1,7 +1,7 @@
 import pytest
 
 from amslint.utils.buildingblocks import Identifier
-from amslint.reports.handlers import Message, Report
+from amslint.reports.handlers import Annotation, Report
 
 
 @pytest.fixture
@@ -23,16 +23,17 @@ def basic_ams_file():
 @pytest.fixture
 def basic_report():
     report = Report(
-        title='Basic Report', details='Basic Report Description', 
+        title='Basic Report', details='Basic Report Description',
         type='BUG', reporter='Basic Reporter', id=None, messages=None
     )
     return report
 
 
 @pytest.fixture
-def basic_message_low():
-    message = Message(
-        title='Basic Message (low severity)', summary='Basic Message', details='Basic Message Description',
+def basic_annotation_low():
+    annotation = Annotation(
+        title='Basic Annotation (low severity)', summary='Basic Annotation',
+        details='Basic Annotation Description',
         type='CODE_SMELL', severity="LOW", path='', line=None, id=None
     )
-    return message
+    return annotation

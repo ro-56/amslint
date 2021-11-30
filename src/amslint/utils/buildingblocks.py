@@ -30,10 +30,12 @@ class FileContents():
     Used to store file contents information on a easy to use way
     """
     
+    filename: str
     contents: list[tuple[(int, list[str])]]
     identifiers: list[Identifier]
 
-    def __init__(self, contents) -> None:
+    def __init__(self, contents: list[str], filename: str = "") -> None:
+        self.filename = filename
         self.contents = [(i+1, line) for i, line in enumerate(contents)]
         self.identifiers = self.__make_list(contents)
         for ident in self.identifiers:
