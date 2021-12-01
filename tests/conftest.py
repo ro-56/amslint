@@ -15,11 +15,14 @@ def basic_ams_file():
         '}\n',
     ]
     identifiers = [
-        Identifier(name='Main_basic', type_='Model', declared_at=3, ends_at=5),
-        Identifier(name='Main_basic', type_='Model', declared_at=4, ends_at=4)
+        Identifier(name='Main_basic', type='Model', declared_at=3, ends_at=5),
+        Identifier(name='Main_basic', type='Model', declared_at=4, ends_at=4)
     ]
     return ams_file, FileContents(ams_file, filename="ams_file.ams"), identifiers
 
+@pytest.fixture
+def basic_identifier():
+    return Identifier(name='Basic_Identifier', type='Parameter', declared_at=1, ends_at=1)
 
 @pytest.fixture
 def basic_report():
@@ -40,12 +43,13 @@ def basic_annotation_low():
     return annotation
 
 @pytest.fixture
-def basic_indentifier_variable():
+def basic_indentifier_variable(basic_identifier):
     attributes = [
         {
-            'name': 'Commrnt',
+            'name': 'Comment',
             'value': TAG_IGNORE,
             'type': 'singleline',
         }
     ]
-    return Identifier(name='basic_variable', type_='Variable', declared_at=1, ends_at=3, attributes=attributes)
+    basic_identifier.add_attribute(attributes)
+    return basic_identifier

@@ -6,14 +6,14 @@ class Identifier():
     Used to store identifiers information on a easy to use way
     """
     name: str
-    type_: str
+    type: str
     declared_at: int
     to_from: int
     attributes: list
 
-    def __init__(self, name: str, type_: str, declared_at: int = -1, ends_at: int = -1, attributes: list = None):
+    def __init__(self, name: str, type: str, declared_at: int = -1, ends_at: int = -1, attributes: list = None):
         self.name = name
-        self.type_ = type_
+        self.type = type
         self.declared_at = declared_at
         self.ends_at = ends_at
         self.attributes = attributes if attributes else [] 
@@ -23,6 +23,34 @@ class Identifier():
             return self.__dict__ == other.__dict__
         else:
             return NotImplemented
+    
+    def __check_attribute_keys(self, attribute) -> bool:
+        if (attribute.get('name')
+            and attribute.get('value')
+            and attribute.get('type')):
+            return True
+        return False
+
+    def add_attribute(self, attribute):
+        if isinstance(attribute, list):
+            for item in attribute:
+                if (not isinstance(item, dict)
+                    or not self.__check_attribute_keys(item)):
+                    raise ValueError('Wrong argument format')
+            self.attributes += attribute
+        elif isinstance(attribute, dict):
+            if not self.__check_attribute_keys(attribute):
+                raise ValueError('Wrong argument format')
+            self.attributes.append(attribute)
+        else:
+            raise ValueError('Wrong argument format')
+
+    def has_attribute(self, name: str) -> bool:
+        if self.attributes:
+            for attri in self.attributes:
+                if attri.get('name') == name:
+                    return True
+        return False
 
 
 class FileContents():
@@ -47,10 +75,10 @@ class FileContents():
         end_line = -1
         
         for idx, line in self.contents:
-            if f'{ident.type_} {ident.name} {{\n' in line:
+            if f'{ident.type} {ident.name} {{\n' in line:
                 declaration_line = idx
                 break
-            elif f'{ident.type_} {ident.name};' in line:
+            elif f'{ident.type} {ident.name};' in line:
                 declaration_line = idx
                 end_line = idx
                 return declaration_line, end_line
@@ -101,7 +129,7 @@ class FileContents():
                     'type' : 'multiLine',
                 })
             
-            identifier.attributes = attrib_list
+            identifier.add_attribute(attrib_list)
             identifier_list.append(identifier)
             identifier_list = self.__make_list(match.groups()[2], identifier_list, indent_lvl=indent_lvl+indent_bumb, indent_bumb=indent_bumb)
 

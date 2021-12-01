@@ -1,14 +1,13 @@
 import enum
 
+class ErrorLevels(enum.Enum):
+    CRITICAL = 5
+    ERROR = 4
+    WARNING = 3
+    INFO = 2
+    DEBUG = 1
 
 class ErrorCodes():
-
-    class ErrorLevels(enum.Enum):
-        CRITICAL = 5
-        ERROR = 4
-        WARNING = 3
-        INFO = 2
-        DEBUG = 1
 
     error_codes = {
         "E001": {
