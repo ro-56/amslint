@@ -1,9 +1,10 @@
 from amslint.utils.buildingblocks import FileContents
 from amslint.reports.handlers import Report, Annotation
 from amslint.messages.handler import MessageHandler
+from abc import ABC, abstractmethod
 
 
-class BasicLinter():
+class BasicLinter(ABC):
 
     __files: list[FileContents]
     __message_handler: MessageHandler
@@ -12,20 +13,20 @@ class BasicLinter():
         self.__files = files
         self.__message_handler = MessageHandler()
 
-    @staticmethod
     def message_handler(self):
         return self.__message_handler
-
-    @staticmethod
-    def analyze_files(self) -> None:
-        for file in self.__files:
-            self.__analyze_file(file)
-        return None
     
-    @staticmethod
-    def get_messages(self):
-        return self.__message_handler.get_messages()
+    def files(self):
+        return self.__files
 
-    def __analyze_file(self, file: FileContents) -> None:
+    @abstractmethod
+    def analyze_files(self):
         """Should be implemented at every subclass"""
-        pass
+        raise NotImplementedError("Must override __analyze_file")
+    
+    def get_messages(self):
+        return self.message_handler().get_messages()
+    
+    def add_message(self, location: int, path: str, code: str):
+        return self.message_handler().add(location=location, path=path, code=code)
+
