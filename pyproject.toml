@@ -1,34 +1,12 @@
 [build-system]
-requires = ["setuptools>=56", "setuptools_scm[toml]>=3.4.1"]
+requires = ["setuptools>=56", "setuptools_scm[toml]>=3.4.1", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.black]
-skip-string-normalization = true
-
-[tool.setuptools_scm]
-
-[pytest.enabler.black]
-addopts = "--black"
-
-[pytest.enabler.mypy]
-addopts = "--mypy"
-
-[pytest.enabler.flake8]
-addopts = "--flake8"
-
-[pytest.enabler.cov]
-addopts = "--cov"
 
 [tool.pytest.ini_options]
-norecursedirs = [
-    'dist', 
-    'build', 
-    '.tox', 
-    '.eggs'
-]
 addopts = [
     "--doctest-modules",
-    "--cov=src",
+    "--cov=amslint",
 ]
 doctest_optionflags = "ALLOW_UNICODE ELLIPSIS"
 filterwarnings = [
@@ -40,6 +18,7 @@ filterwarnings = [
 testpaths = [
     "tests",
 ]
+
 
 [tool.mypy]
 mypy_path = "src"

@@ -1,8 +1,8 @@
 """"""
 from dataclasses import dataclass, field, InitVar
-from uuid import UUID, uuid4
 from enum import Enum, auto
 from inspect import getframeinfo, stack
+from typing import Any, Optional
 
 from amslint.messages.protocol import Message
 
@@ -16,9 +16,8 @@ class MessageChannel():
     init_type: InitVar[str] = None
     name: str = ""
     description: str = ""
-    type: 'MessageChannelType' = None
-    messages: list = field(default_factory=list)
-    id: UUID = field(default_factory=uuid4)
+    type: Optional['MessageChannelType'] = None
+    messages: list[Message] = field(default_factory=list)
 
     def __post_init__(self, init_type: str):
         if (not init_type 
@@ -28,19 +27,19 @@ class MessageChannel():
         else:
             self.type = self.MessageChannelType[init_type.upper()]
     
-    def send_message(self, msg: str, metadata: dict = None) -> None:
+    def send_message(self, msg: str, metadata: Optional[dict[Any, Any]] = None) -> None:
         """
         Send a message to the channel.
         """
         caller = getframeinfo(stack()[1][0])
         sender = f"{caller.filename}:{caller.lineno}"
 
-        if metadata is None:
-            msg = Message(msg=msg, sender=sender)
+        if not metadata:
+            messag_obj = Message(msg=msg, sender=sender)
         else:
-            msg = Message(msg=msg, sender=sender, metadata=metadata)
+            messag_obj = Message(msg=msg, sender=sender, metadata=metadata)
         
-        self.messages.append(msg)
+        self.messages.append(messag_obj)
 
         return
     
@@ -59,10 +58,10 @@ class MessageHandler():
     A class that represents a message handler.
     """
 
-    active_channels: list
-    closed_channels: list
-    default_service_channel = None
-    default_channel = None
+    active_channels: list[MessageChannel]
+    closed_channels: list[MessageChannel]
+    default_service_channel: Optional[MessageChannel] = None
+    default_channel: Optional[MessageChannel] = None
 
     def __init__(self) -> None:
         self.active_channels = []
@@ -146,25 +145,39 @@ class MessageHandler():
 
         return channel
 
-    def send_message(self, msg: str, channel_name: str = None, metadata: dict = None) -> None:
+    def send_message(self, msg: str, channel_name: Optional[str] = None, metadata: Optional[dict[Any, Any]] = None) -> None:
         if channel_name and self._channel_exists(channel_name):  
             channel = self._get_channel(channel_name)
             channel.send_message(msg=msg, metadata=metadata)
         else:
-            self.default_channel.send_message(msg=msg, metadata=metadata)
+            if self.default_channel:
+                self.default_channel.send_message(msg=msg, metadata=metadata)
+            else:
+                raise ValueError("No default channel is open.")
 
-    def get_messages(self, channel_name: str = None) -> list[Message]:
-        if self._channel_exists(channel_name):
+    def get_messages(self, channel_name: Optional[str] = None) -> list[Message]:
+        if channel_name and self._channel_exists(channel_name):
             channel = self._get_channel(channel_name)
             return channel.messages
         else:
             return []
     
     def get_messages_from_default(self) -> list[Message]:
-        return self.default_channel.messages
+        if self.default_channel:
+            return self.default_channel.messages
+        else:
+            return []
     
-    def send_service_messages(self, msg: str, metadata: dict = None) -> None:
-        self.default_service_channel.send_message(msg=msg, metadata=metadata)
+    def send_service_messages(self, msg: str, metadata: Optional[dict[Any, Any]] = None) -> None:
+        if self.default_service_channel:
+            self.default_service_channel.send_message(msg=msg, metadata=metadata)
+        else:
+            raise ValueError("No default service channel is open.")
+
+        return
 
     def get_service_messages(self) -> list[Message]:
-        return self.default_service_channel.messages
+        if self.default_service_channel:
+            return self.default_service_channel.messages
+        else:
+            return []
