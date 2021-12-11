@@ -9,4 +9,3 @@ class Message():
     msg: str
     sender: str
     metadata: dict[Any, Any] = field(default_factory=dict)
-    

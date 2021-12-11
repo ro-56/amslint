@@ -2,9 +2,7 @@
 import logging
 import time
 from typing import Optional
-from typing import Type
 
-import amslint
 from amslint import exceptions
 from amslint import style_guide
 
@@ -20,9 +18,8 @@ class Application:
     guide: Optional[style_guide.StyleGuideManager]
     # file_checker_manager
     # guide_plugins:
-    # report_formatting_plugins: 
+    # report_formatting_plugins:
     catastrophic_failure: bool
-
 
     def __init__(self):
         """Initialize the application.
@@ -34,16 +31,16 @@ class Application:
 
         # #: The instance of :class:`flake8.plugins.manager.Checkers`
         # self.check_plugins: Optional[plugin_manager.Checkers] = None
-        
+
         # #: The instance of :class:`flake8.plugins.manager.ReportFormatters`
         # self.report_formatting_plugins: Optional[
         #     plugin_manager.ReportFormatters
         # ] = None
-        
+
         #: The :class:`flake8.style_guide.StyleGuideManager` built from the
         #: user's options
         self.guide: Optional[style_guide.StyleGuideManager] = None
-        
+
         # #: The :class:`flake8.checker.Manager` that will handle running all of
         # #: the checks selected by the user.
         # self.file_checker_manager: Optional[checker.Manager] = None

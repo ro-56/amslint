@@ -37,6 +37,7 @@ def test_close_channel(message_handler):
     assert message_handler._channel_exists("test_channel")
     assert not message_handler._channel_is_active("test_channel")
 
+
 def test_flush_closed_channel(message_handler):
     """
     Test flushing closed channels

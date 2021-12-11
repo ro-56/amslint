@@ -20,13 +20,11 @@ class MessageChannel():
     messages: list[Message] = field(default_factory=list)
 
     def __post_init__(self, init_type: str):
-        if (not init_type 
-            or init_type.upper() not in self.MessageChannelType.__members__
-            ):
+        if (not init_type or init_type.upper() not in self.MessageChannelType.__members__):
             self.type = self.MessageChannelType.UNKNOWN
         else:
             self.type = self.MessageChannelType[init_type.upper()]
-    
+
     def send_message(self, msg: str, metadata: Optional[dict[Any, Any]] = None) -> None:
         """
         Send a message to the channel.
@@ -38,11 +36,11 @@ class MessageChannel():
             messag_obj = Message(msg=msg, sender=sender)
         else:
             messag_obj = Message(msg=msg, sender=sender, metadata=metadata)
-        
+
         self.messages.append(messag_obj)
 
         return
-    
+
     class MessageChannelType(Enum):
         """
         An enum that represents the type of a message channel.
@@ -51,8 +49,8 @@ class MessageChannel():
         SERVICE = auto()
         CUSTOM = auto()
         UNKNOWN = auto()
-    
-    
+
+
 class MessageHandler():
     """
     A class that represents a message handler.
@@ -69,7 +67,7 @@ class MessageHandler():
         self.initialize()
 
         return
-    
+
     def initialize(self) -> None:
         """
         Initialize the message handler.
@@ -93,7 +91,7 @@ class MessageHandler():
         """
         if self._channel_exists(channel_name):
             raise ValueError(f"Channel {channel_name} already exists.")
-        
+
         if type:
             new_channel = MessageChannel(name=channel_name, init_type=type, description=channel_description)
         else:
@@ -102,7 +100,7 @@ class MessageHandler():
         self.active_channels.append(new_channel)
 
         return new_channel
-    
+
     def close_channel(self, channel_name: str) -> None:
         """
         Close a channel.
@@ -113,7 +111,7 @@ class MessageHandler():
             self.closed_channels.append(channel)
 
         return
-    
+
     def flush_closed_channels(self) -> None:
         """
         Flush closed channels.
@@ -121,13 +119,13 @@ class MessageHandler():
         self.closed_channels = []
 
         return
-    
+
     def _channel_exists(self, channel_name: str) -> bool:
         """
         Check if a channel exists.
         """
         return channel_name in [channel.name for channel in self.all_channel()]
-    
+
     def _channel_is_active(self, channel_name: str) -> bool:
         """
         Check if a channel is active.
@@ -146,7 +144,7 @@ class MessageHandler():
         return channel
 
     def send_message(self, msg: str, channel_name: Optional[str] = None, metadata: Optional[dict[Any, Any]] = None) -> None:
-        if channel_name and self._channel_exists(channel_name):  
+        if channel_name and self._channel_exists(channel_name):
             channel = self._get_channel(channel_name)
             channel.send_message(msg=msg, metadata=metadata)
         else:
@@ -161,13 +159,13 @@ class MessageHandler():
             return channel.messages
         else:
             return []
-    
+
     def get_messages_from_default(self) -> list[Message]:
         if self.default_channel:
             return self.default_channel.messages
         else:
             return []
-    
+
     def send_service_messages(self, msg: str, metadata: Optional[dict[Any, Any]] = None) -> None:
         if self.default_service_channel:
             self.default_service_channel.send_message(msg=msg, metadata=metadata)
