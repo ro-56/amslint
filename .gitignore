@@ -1,2 +1,6 @@
-/log
-/build
+.vscode/
+__pycache__/
+*.egg-info/
+.*_cache/
+.coverage
+.tox/
