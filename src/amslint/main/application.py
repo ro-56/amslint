@@ -1,4 +1,5 @@
 """Module containing the application logic"""
+
 import logging
 import time
 from typing import Optional
